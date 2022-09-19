@@ -11,15 +11,15 @@ importFrom("slam", "as.simple_sparse_array")
 importFrom("drc", "drm")
 importFrom("insol", "JD", "daylength")
 importFrom("raster", "stack", "raster", "rasterFromXYZ")
-importFrom("sp", "gridded", "coordinates")
+importFrom("sp", "gridded", "coordinates", "spTransform", "CRS", "SpatialPoints")
 
 #####################################
 ##               Export            ##
 #####################################
-export(dynamAedes, .beta.fun, .DRC.beta, .beta.init)
+export(dynamAedes.m, .beta.fun, .DRC.beta, .beta.init)
 export(.a.a_disp.f, .a.gono_rate.f, .a.ovi_rate.f, 
 .a.surv_rate.f, .i.emer_rate.f, .e.surv_rate.f,
 .i.surv_rate.f, .e.hatch_rate.f, .e.dia_rate.f, 
 .d.surv_rate.f, .i.ddmort_rate.f, psi, psi_sp, 
-icci, adci, adci_sp, get_rates_spatial, dici, 
+icci, adci, adci_sp, dici, 
 .returndis, .euc, .meuc)

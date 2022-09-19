@@ -1,3 +1,14 @@
+# dynamAedes 2.1
+* Adding website with examples for the three scales (pkgdown)
+* Coordinates now internally transformed (if not in lat/long) for the derivation of the photoperiod
+* Adding option **coords.proj4** to specify coordinate projection (in proj4 format)
+* Renaming dynamAedes as dynamAedes
+
+# dynamAedes 2.0.3
+* At regional scale now diapause derived pixel by pixel using the photoperiod of input coordinates.
+* You can now introduce diapause eggs using dynamAedes argument
+ "intro.degg"
+
 # dynamAedes 2.0.2
 * Minor bug fix for idci and icci functions
 * Change option name for passive dispersal; option to use a numeric vector for average passive dispersal
