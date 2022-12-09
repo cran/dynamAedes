@@ -42,7 +42,7 @@ r <- raster(nrow=gridDim, ncol=gridDim, crs=utm32N, ext=extent(1220000,1225000, 
 values(r)=xyz$sim1
 plot(r, main="SAC landscape")
 
-df <- data.frame("id"=1:nrow(xyz), coordinates(r))
+df <- data.frame("id"=1:nrow(xyz), raster::coordinates(r))
 bbox <- as(extent(r), "SpatialPolygons")
 projection(bbox) <- projection(utm32N)
 
@@ -80,13 +80,19 @@ mat <-do.call(rbind, lapply(1:ncell(r), function(x) {
 	return(d_t)
 }))
 
+## ----  message=FALSE, warning=FALSE, hide=TRUE--------------------------------
+oldpar <- par(mfrow = c(1,2)) 
+
 ## -----------------------------------------------------------------------------
 par(mfrow=c(2,1))
 hist(mat, xlab="Temperature (°C)", main="Histogram of simulated spatial autocorreled temperature")
 hist(sim_temp[[1]]$x, xlab="Temperature (°C)", main="Histogram of simulated temperatures", col="red")
 par(mfrow=c(1,1))
 
-# Format temperature data
+## ----  message=FALSE, warning=FALSE, hide=TRUE--------------------------------
+par(oldpar) 
+
+## -----------------------------------------------------------------------------
 names(mat) <- paste0("d_", 1:ndays)
 df_temp <- cbind(df, mat)
 
@@ -186,10 +192,10 @@ simout=dynamAedes.m(species="albopictus",
             intro.adults=ia,  
             compressed.output=TRUE, 
             cellsize=250,
-            maxadisp=mypDist,
+            maxadisp=600,
             dispbins=10,
             seeding=TRUE,
-            verbose=TRUE
+            verbose=FALSE
             )
 
 ## -----------------------------------------------------------------------------
@@ -238,12 +244,12 @@ outdf %>%
   mutate(myStage=factor(myStage, levels= c('Egg', 'Diapausing egg', 'Juvenile', 'Adult'))) %>% 
   ggplot( aes(y=`50%`,x=Date, group=factor(myStage),col=factor(myStage))) +
   ggtitle("Ae. albopictus Interquantile range abundance")+
-  geom_line(size=1.2)+
+  geom_line(linewidth=0.8)+
   geom_ribbon(aes(ymin=`25%`,ymax=`75%`,fill=factor(myStage)),
               col="white",
               alpha=0.2,
               outline.type="full")+
-  labs(x="Date", y="Interquantile range abundance (Log10)", col="Stage", fill="Stage")+
+  labs(x="Date", y="Interquantile range abundance", col="Stage", fill="Stage")+
   facet_wrap(~myStage, scales = "free")+
   theme_light()+
   theme(legend.pos="bottom",  text = element_text(size=14) , strip.text = element_text(face = "italic"))
@@ -260,7 +266,7 @@ tail(x)
 
 ## -----------------------------------------------------------------------------
 x=dici(simout, coords=cc, eval_date=seq(1,60,length.out=60), breaks=c(0.25,0.50,0.75), space=FALSE)
-plot(`75%`~day,x,type="l",ylab="Population dispersal (in meters) from cell of introduction",xlab="days from introduction")
-lines(`50%`~day,x,type="l", col="red")
-lines(`25%`~day,x,type="l")
+plot(`0.25`~day,x,type="l",ylab="Population dispersal (in meters) from cell of introduction",xlab="days from introduction")
+lines(`0.5`~day,x,type="l", col="red")
+lines(`0.75`~day,x,type="l")
 

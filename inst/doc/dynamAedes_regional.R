@@ -41,7 +41,7 @@ r <- raster(nrow=gridDim, ncol=gridDim, crs=utm32N, ext=extent(1220000,1225000, 
 values(r)=xyz$sim1
 plot(r)
 
-df <- data.frame("id"=1:nrow(xyz), coordinates(r))
+df <- data.frame("id"=1:nrow(xyz), raster::coordinates(r))
 bbox <- as(extent(r), "SpatialPolygons")
 
 # Store Parameters for autocorrelation
@@ -80,20 +80,26 @@ mat <- lapply(1:ncell(r), function(x) {
 
 mat <- do.call(rbind,mat)
 
+## ----  message=FALSE, warning=FALSE, hide=TRUE--------------------------------
+oldpar <- par(mfrow = c(1,2)) 
+
 ## -----------------------------------------------------------------------------
 par(mfrow=c(2,1))
 hist(mat, xlab="Temperature (°C)", main="Histogram of simulated spatial autocorreled temperatures")
 hist(sim_temp[[1]]$x, xlab="Temperature (°C)", main="Histogram of simulated temperatures", col="red")
 par(mfrow=c(1,1))
 
-# Format temperature data
+## ----  message=FALSE, warning=FALSE, hide=TRUE--------------------------------
+par(oldpar) 
+
+## -----------------------------------------------------------------------------
 names(mat) <- paste0("d_", 1:ndays)
 df_temp <- cbind(df, mat)
 
-## ---- evaluate=FALSE----------------------------------------------------------
+## -----------------------------------------------------------------------------
 w <- sapply(df_temp[,-c(1:3)], function(x) as.integer(x*1000))
 
-## ---- evaluate=FALSE----------------------------------------------------------
+## -----------------------------------------------------------------------------
 cc <- df_temp[,c("x","y")]
 
 ## ---- evaluate=FALSE----------------------------------------------------------
@@ -165,7 +171,7 @@ outdf %>%
   mutate(myStage=factor(myStage, levels= c('Egg', 'Diapausing egg', 'Juvenile', 'Adult'))) %>% 
   ggplot( aes(y=(`50%`),x=Date, group=factor(myStage),col=factor(myStage))) +
   ggtitle("Ae. albopictus Interquantile range abundance")+
-  geom_line(size=1.2)+
+  geom_line(linewidth=1.2)+
   geom_ribbon(aes(ymin=`25%`,ymax=(`75%`),fill=factor(myStage)),
               col="white",
               alpha=0.2,

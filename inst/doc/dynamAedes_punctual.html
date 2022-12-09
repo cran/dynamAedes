@@ -12,7 +12,7 @@
 
 <meta name="author" content="Daniele Da Re, Sophie 0. Vanwambeke, Matteo Marcantonio" />
 
-<meta name="date" content="2022-09-19" />
+<meta name="date" content="2022-12-09" />
 
 <title>The punctual scale model</title>
 
@@ -356,11 +356,11 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">The punctual scale model</h1>
 <h4 class="author">Daniele Da Re, Sophie 0. Vanwambeke, Matteo Marcantonio</h4>
-<h4 class="date">2022-09-19</h4>
+<h4 class="date">2022-12-09</h4>
 
 
 
-<p>This tutorial explains step-by-step the main features of <strong>dynamAedes</strong> package, a unified modelling framework for invasive <em>Aedes</em> mosquitoes. Users can apply the stochastic, time-discrete and spatially-explicit population dynamical model initially developed in <a href="https://doi.org/10.1016/j.ecoinf.2020.101180">Da Re et al., (2021)</a> for <em>Aedes aegypti</em> and then expanded for other three species: <em>Ae. albopictus</em>, <em>Ae. japonicus</em> and <em>Ae. koreicus</em> <a href="http://dx.doi.org/10.1101/2021.12.21.473628">Da Re et al., (<em>under review</em>)</a>.</p>
+<p>This tutorial explains step-by-step the main features of <strong>dynamAedes</strong> package, a unified modelling framework for invasive <em>Aedes</em> mosquitoes. Users can apply the stochastic, time-discrete and spatially-explicit population dynamical model initially developed in <a href="https://doi.org/10.1016/j.ecoinf.2020.101180">Da Re et al., (2021)</a> for <em>Aedes aegypti</em> and then expanded for other three species: <em>Ae. albopictus</em>, <em>Ae. japonicus</em> and <em>Ae. koreicus</em> <a href="https://doi.org/10.1186/s13071-022-05414-4">Da Re et al., (2022)</a>.</p>
 <p>The model is driven by temperature, photoperiod and intra-specific larval competition and can be applied to three different spatial scales: punctual, local and regional. These spatial scales consider different degrees of spatial complexity and data availability, by accounting for both active and passive dispersal of the modelled mosquito species as well as for the heterogeneity of input temperature data.</p>
 <p>We will describe the model applications for <em>Ae. albopictus</em> and for all spatial scales by using a simulated temperature dataset.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="co">#Load packages</span></span>
@@ -520,7 +520,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb24-25"><a href="#cb24-25" aria-hidden="true"></a>         <span class="dt">Date=</span><span class="kw">rep</span>(<span class="kw">seq.Date</span>(<span class="kw">as.Date</span>(str), <span class="kw">as.Date</span>(endr)<span class="op">-</span><span class="dv">2</span>, <span class="dt">by=</span><span class="st">&quot;day&quot;</span>),<span class="dv">4</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb24-26"><a href="#cb24-26" aria-hidden="true"></a><span class="kw">ggplot</span>( <span class="kw">aes</span>(<span class="dt">x=</span>Date, <span class="dt">y=</span>X50., <span class="dt">group=</span><span class="kw">factor</span>(myStage),<span class="dt">col=</span><span class="kw">factor</span>(myStage))) <span class="op">+</span></span>
 <span id="cb24-27"><a href="#cb24-27" aria-hidden="true"></a><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Ae. albopictus Interquantile range abundance&quot;</span>)<span class="op">+</span></span>
-<span id="cb24-28"><a href="#cb24-28" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size=</span><span class="fl">0.8</span>)<span class="op">+</span></span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">linewidth=</span><span class="fl">0.8</span>)<span class="op">+</span></span>
 <span id="cb24-29"><a href="#cb24-29" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_ribbon</span>(<span class="kw">aes</span>(<span class="dt">ymin=</span>X25.,<span class="dt">ymax=</span>X75.,<span class="dt">fill=</span><span class="kw">factor</span>(myStage)),</span>
 <span id="cb24-30"><a href="#cb24-30" aria-hidden="true"></a>              <span class="dt">col=</span><span class="st">&quot;white&quot;</span>,</span>
 <span id="cb24-31"><a href="#cb24-31" aria-hidden="true"></a>              <span class="dt">alpha=</span><span class="fl">0.2</span>,</span>
