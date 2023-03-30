@@ -4,15 +4,15 @@ knitr::opts_chunk$set(fig.width=10, fig.height=10, fig.asp = 0.618, out.width = 
 ## ----  message=FALSE, warning=FALSE-------------------------------------------
 #Load packages
 require(spatstat)
-require(sp)
 require(gstat)
 require(parallel)
 require(eesim)
-require(tidyverse)
+require(dplyr)
 require(geosphere)
 require(ggplot2)
-require(rgeos)
-#require(rgdal)
+require(terra)
+require(rgdal)
+require(raster)
 require(dynamAedes)
 
 Sys.setlocale("LC_TIME", "en_GB.UTF-8")  
