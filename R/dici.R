@@ -2,7 +2,6 @@
 #'
 #' Estimates of dispersal (in km^2) for the simulated mosquito population when \code{scale = "lc"}.
 #' @param input_sim matrix. \code{dynamAedes.m} compressed output matrix (\code{compressed=TRUE}).
-#' @param coords matrix. A matrix reporting the spatial coordinates of the temperature observations.
 #' @param eval_date numeric. Define the day of evaluation; it refers to the column number of the input temperature matrix. 
 #' @param breaks numeric vector. Quantile breaks, default interquartile range: \code{c(0.25,0.5,0.75)}.
 #' @param space See below for more details.
@@ -10,9 +9,19 @@
 #' @author Matteo Marcantonio \email{marcantoniomatteo@gmail.com}, Daniele Da Re \email{daniele.dare@uclouvain.be}
 #' @export
 
-dici <- function(input_sim=NULL, coords=NULL, eval_date=NULL, breaks=c(0.25,0.5,0.75), space=FALSE) {
+dici <- function(input_sim=NULL, eval_date=NULL, breaks=c(0.25,0.5,0.75), space=FALSE) {
+		if(!is.numeric(eval_date)) {
+		stop("eval_date not defined, exiting...")
+	}
+	if(!input_sim@compressed_output) {
+		stop("Provide compressed simulation output...")
+	}
+
+	coords = input_sim@coordinates
+	input_sim = input_sim@simulation
+
 	if( max(eval_date) > max(sapply(input_sim,length)) ) {
-		stop("eval_date > than number of simulated days...")
+		stop("eval_date > number of simulated days...")
 	}
 	if( all(unlist(lapply(input_sim, function(x) { sapply(x,length) } ))==4) ) {
 		stop("Non-dispersal model, set scale='lc' in dynamAedes.m()")
@@ -38,10 +47,10 @@ dici <- function(input_sim=NULL, coords=NULL, eval_date=NULL, breaks=c(0.25,0.5,
 				coords1$inv <- 0
 				coords1$inv[x[[maxdate]]] <- 1
 				names(coords1)=c("X", "Y", paste0("day",maxdate,"_inv_cells_Iteration"))
-				coords1 <- rasterFromXYZ(coords1)
+				coords1 <- terra::rast(coords1, type="xyz")
 				return(coords1)
 			})
-			return(stack(outs))
+			return(do.call(c,outs))
 		}
 	}
 }

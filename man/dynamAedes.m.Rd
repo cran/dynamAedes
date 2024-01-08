@@ -5,14 +5,14 @@
 \title{Life cycle simulation of \emph{Aedes} mosquitoes}
 \usage{
 dynamAedes.m(
-  species = "aegypti",
+  species = NULL,
   intro.eggs = 0,
   intro.deggs = 0,
   intro.adults = 0,
   intro.juveniles = 0,
-  scale = "ws",
+  scale = NULL,
   intro.cells = NULL,
-  jhwv = 2,
+  jhwv = NULL,
   temps.matrix = NULL,
   startd = 1,
   endd = NA,
@@ -22,16 +22,16 @@ dynamAedes.m(
   long = NA,
   road.dist.matrix = NULL,
   avgpdisp = NA,
+  pDispersal = TRUE,
   iter = 1,
   n.clusters = 1,
   cluster.type = "PSOCK",
-  sparse.output = FALSE,
   compressed.output = TRUE,
   suffix = NA,
   cellsize = 250,
   maxadisp = 600,
   dispbins = 10,
-  verbose = FALSE,
+  verbose = 0,
   seeding = FALSE
 )
 }
@@ -54,9 +54,9 @@ dynamAedes.m(
 
 \item{temps.matrix}{matrix. A matrix of daily (average) temperatures (in degrees \strong{Celsius degree x 1000}) used to fit the life cycle rates. This matrix must be organised with the daily temperature observations as columns and the geographic position of the i-grid cell as rows. \bold{Importantly}, the first column must match \code{startd} date.}
 
-\item{startd}{Character  date (ISO format "\%Y-\%m-\%d"). Date of start of simulations.}
+\item{startd}{Character date (ISO format "\%Y-\%m-\%d"). Date of start of simulations.}
 
-\item{endd}{Character  date (ISO format "\%Y-\%m-\%d"). Date of end of simulation. It can be \code{NA}; then it will be derived using the number of columns in \code{temps.matrix}.}
+\item{endd}{Character date (ISO format "\%Y-\%m-\%d"). Date of end of simulation. It can be \code{NA}; then it will be derived using the number of columns in \code{temps.matrix}.}
 
 \item{cells.coords}{matrix. A matrix reporting the spatial coordinates of the temperature observations.}
 
@@ -66,9 +66,11 @@ dynamAedes.m(
 
 \item{long}{numeric. Longitude value of the area of interested used to derive the photoperiod (and thus the diapause eggs allocation function)}
 
-\item{road.dist.matrix}{matrix. when \code{scale = "lc"}, defines the matrix containing the distances (in meters) between grid cells intersecting the road network for the mosquito passive dispersal process.}
+\item{road.dist.matrix}{matrix. when \code{scale = "lc"}, defines the matrix containing the distances (in meters) between grid cells intersecting the road network for the mosquito passive dispersal process. colnames(road.dist.matrix) must correspond to the same cell in temps.matrix (may be an issue if the coordinates used for creating road.dist.matrix have been subset to match road segments).}
 
-\item{avgpdisp}{optional. when \code{scale = "lc"}, define the average car trip distance for the mosquito passive dispersal process. The value can be set by the users (positive numeric), or the estimates made by \href{https://publications.jrc.ec.europa.eu/repository/handle/JRC77079}{Pasaoglu et al. 2012}) for the following European countries: France "fra", Germany "deu", Italy "ita", Poland "pol", Spain "esp" and the United Kingdom "uk". The average passive dispersal distance must be smaller than the maximum distance in \strong{road.dist.matrix}.}
+\item{avgpdisp}{optional. when \code{scale = "lc"}, define the average car trip distance (in meters) for the mosquito passive dispersal process. The value can be set by the users (positive numeric), or the estimates made by \href{https://publications.jrc.ec.europa.eu/repository/handle/JRC77079}{Pasaoglu et al. 2012}) for the following European countries: France "fra", Germany "deu", Italy "ita", Poland "pol", Spain "esp" and the United Kingdom "uk". The average passive dispersal distance must be smaller than the maximum distance in \strong{road.dist.matrix}.}
+
+\item{pDispersal}{boolean. if TRUE (default) then the model considers passive dispersal.}
 
 \item{iter}{positive integer. Define the number of model iterations.}
 
@@ -76,19 +78,17 @@ dynamAedes.m(
 
 \item{cluster.type}{character. Defines the type of cluster, default "PSOCK".}
 
-\item{sparse.output}{logical. The output matrix is optimised for sparse-matrix algebra (e.g. zeros are indexed).}
-
 \item{compressed.output}{logical. Default TRUE, if FALSE provide abundance for each model's subcompartiment; if FALSE abundances are summed per compartment.}
 
 \item{suffix}{character. Model output suffix for output RDS.}
 
-\item{cellsize}{(positive integer. When \code{scale = "lc"}, defines the minimal distance for the active dispersal kernel and should match the spatial resolution of temps.matrix to avoid inconsistencies. Default cellsize = 250}
+\item{cellsize}{positive integer. When \code{scale = "lc"}, defines the minimal distance for the active dispersal kernel and should match the spatial resolution of temps.matrix to avoid inconsistencies. Default cellsize = 250.}
 
-\item{maxadisp}{positive integer. When \code{scale = "lc"}, defines the maximum daily dispersal, default maxadisp = 600.}
+\item{maxadisp}{positive integer. When \code{scale = "lc"}, defines the maximum daily active dispersal, default maxadisp = 600.}
 
-\item{dispbins}{positive integer. When scale = "lc", defines the resolution of the dispersal kernel, default dispbins = 10.}
+\item{dispbins}{positive integer. When scale = "lc", defines the resolution of the active dispersal kernel, default dispbins = 10.}
 
-\item{verbose}{logical. if TRUE then an overview of population dynamics is printed in the console.}
+\item{verbose}{integer. if 1 then an overview of population dynamics is printed in the console, if 2 more information on population dynamics are printed out. Default is 0 (silent).}
 
 \item{seeding}{logical, default \code{FALSE}, if \code{seeding=TRUE} a fixed seed is applied for result reproducibility.}
 }
@@ -104,7 +104,7 @@ Function to simulate population dynamics of \emph{Aedes} mosquitoes
 # Make a toy temperature time series
 w <- matrix(seq(20,25,length.out=5),ncol=5)*1000
 # Run the model
-	dynamAedes.m(
+	simout <- dynamAedes.m(
 	species="koreicus", 
 	scale="ws",
 	intro.eggs=10, 
@@ -116,7 +116,8 @@ w <- matrix(seq(20,25,length.out=5),ncol=5)*1000
 	long=8,
 	n.clusters=1, 
 	iter=1,
-	compressed.output=TRUE)
+	compressed.output=TRUE,
+	verbose=FALSE)
 }
 }
 \seealso{
